@@ -18,6 +18,7 @@
         android:padding="24dp">
 
         <TextView
+            android:id="@+id/welcomeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
@@ -28,6 +29,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/createAccountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -38,6 +40,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/usernameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -51,6 +54,7 @@
             android:background="@color/gray" />
 
         <EditText
+            android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -64,6 +68,7 @@
             android:background="@color/gray" />
 
         <EditText
+            android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -78,19 +83,18 @@
             android:background="@color/gray" />
 
         <Button
+            android:id="@+id/registerButton"
             android:layout_width="154dp"
             android:layout_height="47dp"
             android:layout_margin="10dp"
-            android:layout_marginTop="100sp"
+            android:layout_marginTop="100dp"
             android:backgroundTint="@color/dark_blue"
-            android:padding="0dp"
-            android:strokeColor="#878787"
-            android:text="Log in"
-            android:textAlignment="center"
+            android:text="Register"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/alreadyHaveAccountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -100,6 +104,7 @@
             android:textSize="14sp" />
 
         <Button
+            android:id="@+id/loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
