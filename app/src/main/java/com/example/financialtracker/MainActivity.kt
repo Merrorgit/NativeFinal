@@ -48,7 +48,8 @@ class MainActivity : AppCompatActivity() {
         val goals = listOf(
             Goal("Goal 1", 600, 1000),
             Goal("Goal 2", 500, 3000),
-            Goal("Goal 3", 700, 1000)
+            Goal("Goal 3", 700, 1000),
+            Goal("Goal 4", 700, 1000)
         )
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_transactions)
