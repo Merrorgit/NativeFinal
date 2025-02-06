@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.financialtracker.API.services.AuthService
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var usernameEditText: EditText
-    private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
     private lateinit var registerButton: Button
@@ -18,43 +19,51 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login)
+        setContentView(R.layout.login) // Убедись, что ты указываешь правильный layout файл
 
-        // Инициализация элементов интерфейса
+        // Инициализируем элементы
         usernameEditText = findViewById(R.id.usernameEditText)
-        emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         loginButton = findViewById(R.id.loginButton)
         registerButton = findViewById(R.id.registerButton)
         noAccountText = findViewById(R.id.noAccountText)
 
-        // Обработчик нажатия на кнопку входа
+        // Обработка нажатия кнопки "Log in"
         loginButton.setOnClickListener {
             val username = usernameEditText.text.toString().trim()
-            val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            if (username.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-                // Реализуй логику входа (например, проверку данных пользователя)
-
-                // Переход на следующий экран после успешного входа
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish() // Закрыть LoginActivity после перехода
+            // Проверка на пустые поля
+            if (username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
-                // Обработать ошибку (например, показать сообщение об ошибке)
+                // Вызов метода для логина
+                AuthService.logIn(username, password, this) { isSuccess ->
+                    if (isSuccess) {
+                        // Если логин успешен, переходим в MainActivity
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        // Если логин не успешен, выводим сообщение
+                        Toast.makeText(this, "Login failed, try again", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 
-        // Обработчик нажатия на кнопку регистрации
+        // Обработка нажатия кнопки "REGISTER"
         registerButton.setOnClickListener {
+            // Переход на экран регистрации
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
 
-        // Обработчик текста "Have no account?"
+        // Обработка нажатия текста "Have no account?"
         noAccountText.setOnClickListener {
-            // Можешь добавить свою логику для перехода на страницу регистрации
+            // Переход на экран регистрации
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
     }
 }
