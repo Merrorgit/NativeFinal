@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.example.financialtracker.data.Transaction
+import com.example.financialtracker.data.TransactionType
 
-class TransactionTransactionAdapter(private val transactions: List<TransactionTransaction>) :
-    RecyclerView.Adapter<TransactionTransactionAdapter.TransactionTransactionViewHolder>() {
+class TransactionAdapter(private val transactions: MutableList<Transaction>) :
+    RecyclerView.Adapter<TransactionAdapter.TransactionTransactionViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionTransactionViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -19,18 +21,24 @@ class TransactionTransactionAdapter(private val transactions: List<TransactionTr
     override fun onBindViewHolder(holder: TransactionTransactionViewHolder, position: Int) {
         val transaction = transactions[position]
         holder.transactionTitle.text = "Transaction ${position + 1}"
-        holder.transactionAmount.text = (if (transaction.isIncome) "+" else "-") + transaction.amount.toString()
-        holder.transactionCategory.text = transaction.category
-        holder.transactionDate.text = transaction.date
 
-        // Устанавливаем цвет текста для доходов и расходов
-        val amountColor = if (transaction.isIncome)
-            ContextCompat.getColor(holder.itemView.context, R.color.dark_blue)
+        // Check if the transaction is an income or expense
+        val isIncome = transaction.type == TransactionType.INCOME
+
+        // Update amount text with "+" or "-" sign
+        holder.transactionAmount.text = (if (isIncome) "+" else "-") + transaction.amount.toString()
+        holder.transactionCategory.text = transaction.category
+        holder.transactionDate.text = transaction.dateOfTransaction
+
+        // Set text color based on type
+        val amountColor = if (isIncome)
+            ContextCompat.getColor(holder.itemView.context, R.color.dark_blue) // Income: blue
         else
-            ContextCompat.getColor(holder.itemView.context, R.color.red)
+            ContextCompat.getColor(holder.itemView.context, R.color.red) // Expense: red
 
         holder.transactionAmount.setTextColor(amountColor)
     }
+
 
     override fun getItemCount() = transactions.size
 

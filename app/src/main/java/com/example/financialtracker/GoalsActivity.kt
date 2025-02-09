@@ -2,15 +2,19 @@ package com.example.financialtracker
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financialtracker.API.services.GoalService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.example.financialtracker.data.Goal
 
 class GoalsActivity : AppCompatActivity() {
 
@@ -18,7 +22,8 @@ class GoalsActivity : AppCompatActivity() {
     private lateinit var dateInput: EditText
     // Список категорий (в будущем можно загружать с бэка)
     private val categories = arrayOf("1", "2", "3", "4", "5")
-
+    private var goals : MutableList<Goal> = mutableListOf()
+    private lateinit var adapter: GoalGoalAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.goals) // Убедитесь, что это ваш файл разметки
@@ -36,15 +41,15 @@ class GoalsActivity : AppCompatActivity() {
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_goals)
 
         // Пример данных
-        val goalsList = listOf(
-            GoalGoal("New Laptop", 600, 1000, "10.12.2025"),
-            GoalGoal("Vacation", 500, 3000, "01.06.2026"),
-            GoalGoal("Car", 700, 1000, "20.09.2025")
-        )
-
+//        val goalsList = listOf(
+//            GoalGoal("New Laptop", 600, 1000, "10.12.2025"),
+//            GoalGoal("Vacation", 500, 3000, "01.06.2026"),
+//            GoalGoal("Car", 700, 1000, "20.09.2025")
+//        )
+        adapter = GoalGoalAdapter(goals)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = GoalGoalAdapter(goalsList)
-
+        recyclerView.adapter = adapter
+        fetchGoals()
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomNavigation.selectedItemId = R.id.nav_goals // Подсвечивает "Goals"
 
@@ -97,5 +102,17 @@ class GoalsActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-
+    private fun fetchGoals() {
+        GoalService.fetchGoals(this) { fetchedGoals ->
+            if (fetchedGoals != null) {
+                Log.d("fetchTransactions", "Received transactions: $fetchedGoals")
+                goals.clear()
+                goals.addAll(fetchedGoals)
+                adapter.notifyDataSetChanged()
+            } else {
+                Log.e("fetchTransactions", "Failed to fetch transactions")
+                Toast.makeText(this, "Failed to fetch transactions", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

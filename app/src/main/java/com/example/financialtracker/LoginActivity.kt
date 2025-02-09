@@ -39,6 +39,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 // Вызов метода для логина
                 AuthService.logIn(username, password, this) { isSuccess ->
+
                     if (isSuccess) {
                         // Если логин успешен, переходим в MainActivity
                         val intent = Intent(this, MainActivity::class.java)

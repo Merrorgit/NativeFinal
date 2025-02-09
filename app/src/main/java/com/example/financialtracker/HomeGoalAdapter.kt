@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financialtracker.data.Goal
 
-data class Goal(val name: String, val currentAmount: Int, val targetAmount: Int)
 
 class GoalAdapter(private val goals: List<Goal>) :
     RecyclerView.Adapter<GoalAdapter.GoalViewHolder>() {

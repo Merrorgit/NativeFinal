@@ -7,8 +7,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.financialtracker.API.APIService
-import com.example.financialtracker.API.routes.AuthAPI
-import com.example.financialtracker.data.LoginData
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback

@@ -38,25 +38,30 @@
                 android:layout_marginTop="20dp"/>
 
             <EditText
+                android:id="@+id/name_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="Input name"
+                android:hint="Name"
                 android:padding="12dp"
                 android:textSize="16sp" />
 
             <EditText
+                android:id="@+id/amount_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="Input amount"
+                android:hint="Amount"
                 android:padding="12dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:inputType="numberDecimal" />
+
+
+
 
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:id="@+id/radio_group_transaction"
                 android:layout_marginBottom="8dp">
 
                 <RadioButton
@@ -99,6 +104,7 @@
                 android:clickable="true"/>
 
             <Button
+                android:id="@+id/add_transaction_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add transaction"

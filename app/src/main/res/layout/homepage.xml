@@ -70,24 +70,6 @@
                 android:textStyle="bold" />
 
             <!-- RecyclerView для последних транзакций -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="Last transactions:"
-                android:textColor="@color/dark_blue"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_transactions"
-                android:elevation="2dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/rounded" />
 
             <!-- RecyclerView для целей -->
             <TextView

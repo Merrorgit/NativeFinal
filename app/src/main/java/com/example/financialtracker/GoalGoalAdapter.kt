@@ -5,8 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financialtracker.data.Goal
 
-class GoalGoalAdapter(private val goals: List<GoalGoal>) :
+
+class GoalGoalAdapter(private val goals: MutableList<Goal>) :
     RecyclerView.Adapter<GoalGoalAdapter.GoalGoalViewHolder>() {
 
     class GoalGoalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -23,8 +25,8 @@ class GoalGoalAdapter(private val goals: List<GoalGoal>) :
 
     override fun onBindViewHolder(holder: GoalGoalViewHolder, position: Int) {
         val goal = goals[position]
-        holder.title.text = goal.title
-        holder.progress.text = "${goal.savedAmount}/${goal.targetAmount}"
+        holder.title.text = goal.name
+        holder.progress.text = "${goal.currentAmount}/${goal.targetAmount}"
         holder.deadline.text = "Deadline: ${goal.deadline}"
     }
 
