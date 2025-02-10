@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import com.example.financialtracker.data.Goal
+import com.example.financialtracker.data.GoalUpdate
 import com.example.financialtracker.data.Transaction
 
 class GoalsActivity : AppCompatActivity() {
@@ -25,15 +26,18 @@ class GoalsActivity : AppCompatActivity() {
     private lateinit var GoalInput: EditText
     private lateinit var dateInput: EditText
     private  lateinit var addButton: Button
+    private  lateinit var addMoneyButton: Button
     // Список категорий (в будущем можно загружать с бэка)
     private val categories = arrayOf("1", "2", "3", "4", "5")
     private var goals : MutableList<Goal> = mutableListOf()
     private lateinit var adapter: GoalGoalAdapter
+    private lateinit var selectedGoalId: String
+    private  var selectedGoalCurrentAmount: Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.goals) // Убедитесь, что это ваш файл разметки
 
-        GoalInput = findViewById(R.id.goal_input)
+        GoalInput = findViewById(R.id.addmoney_goal_input)
         // Выбор категории
         GoalInput.setOnClickListener {
             showCategoryDialog()
@@ -42,7 +46,10 @@ class GoalsActivity : AppCompatActivity() {
         dateInput.setOnClickListener {
             showDatePickerDialog()
         }
-
+        addMoneyButton = findViewById(R.id.addmoney_goal_button)
+        addMoneyButton.setOnClickListener{
+            addMoneyToGoal()
+        }
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_goals)
         addButton = findViewById(R.id.add_goal_button)
         addButton.setOnClickListener {
@@ -79,10 +86,25 @@ class GoalsActivity : AppCompatActivity() {
     // Открывает диалог со списком категорий
     private fun showCategoryDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Сhoose a goal")
+        builder.setTitle("Choose a goal")
 
-        builder.setItems(categories) { _, which ->
-            GoalInput.setText(categories[which])
+        // Use a list instead of a map to store goals
+        val goalList = goals.toList() // Keeping the original list order
+
+        // Convert goal names into an array for the dialog
+        val goalNames = goalList.map { it.name }.toTypedArray()
+
+        builder.setItems(goalNames) { _, which ->
+            val selectedGoal = goalList[which]  // Get the full selected Goal object
+
+            // Extract the ID and current amount
+            selectedGoalId = selectedGoal.id  // Assuming `id` is a String
+            selectedGoalCurrentAmount = selectedGoal.currentAmount  // Assuming `currentAmount` is a Double
+
+            // Update the input field with the selected name
+            GoalInput.setText(selectedGoal.name)
+
+            Log.e("GoalSelection", "Selected Goal ID: $selectedGoalId, Current Amount: $selectedGoalCurrentAmount")
         }
 
         builder.show()
@@ -144,5 +166,33 @@ class GoalsActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to add transaction", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
+
+    private fun addMoneyToGoal() {
+        val idInput = selectedGoalId
+        val currentAmount = findViewById<EditText>(R.id.addmoney_goal_amount).text.toString().trim().toDouble()
+
+        if (idInput.isEmpty() || currentAmount.isNaN()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val newGoal = GoalUpdate(
+            currentAmount = selectedGoalCurrentAmount + currentAmount,
+        )
+        Log.e("dataCheck", currentAmount.toString())
+        GoalService.addMoneyToGoal(this, newGoal, idInput) { goal ->
+            if (goal != null) {
+                Toast.makeText(this, "Money added!", Toast.LENGTH_SHORT).show()
+                goals.add(0, goal)
+                adapter.notifyItemInserted(0)
+            } else {
+                Toast.makeText(this, "Failed to add transaction", Toast.LENGTH_SHORT).show()
+            }
+        }
+        adapter.notifyDataSetChanged()
+
+
+}
 }

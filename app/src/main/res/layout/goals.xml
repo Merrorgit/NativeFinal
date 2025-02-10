@@ -88,7 +88,7 @@
                 android:layout_marginTop="20dp"/>
 
             <EditText
-                android:id="@+id/goal_input"
+                android:id="@+id/addmoney_goal_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -99,6 +99,7 @@
                 android:clickable="true"/>
 
             <EditText
+                android:id="@+id/addmoney_goal_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -110,6 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add money"
+                android:id="@+id/addmoney_goal_button"
                 android:backgroundTint="@color/dark_blue"
                 android:textColor="@color/white"
                 android:layout_gravity="center"

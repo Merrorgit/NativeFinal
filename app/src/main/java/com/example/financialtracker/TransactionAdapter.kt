@@ -8,6 +8,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.financialtracker.data.Transaction
 import com.example.financialtracker.data.TransactionType
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class TransactionAdapter(private val transactions: MutableList<Transaction>) :
     RecyclerView.Adapter<TransactionAdapter.TransactionTransactionViewHolder>() {
@@ -17,7 +20,19 @@ class TransactionAdapter(private val transactions: MutableList<Transaction>) :
             .inflate(R.layout.item_transaction, parent, false)
         return TransactionTransactionViewHolder(view)
     }
+    private fun formatDate(isoDate: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            inputFormat.timeZone = TimeZone.getTimeZone("UTC")
 
+            val outputFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()) // Example: 10 Feb 2025, 15:25
+            val date = inputFormat.parse(isoDate)
+
+            date?.let { outputFormat.format(it) } ?: "Invalid date"
+        } catch (e: Exception) {
+            "Invalid date"
+        }
+    }
     override fun onBindViewHolder(holder: TransactionTransactionViewHolder, position: Int) {
         val transaction = transactions[position]
         holder.transactionTitle.text = "Transaction ${position + 1}"
@@ -28,7 +43,10 @@ class TransactionAdapter(private val transactions: MutableList<Transaction>) :
         // Update amount text with "+" or "-" sign
         holder.transactionAmount.text = (if (isIncome) "+" else "-") + transaction.amount.toString()
         holder.transactionCategory.text = transaction.category
-        holder.transactionDate.text = transaction.dateOfTransaction
+
+        // Format transaction date before displaying
+        val formattedDate = formatDate(transaction.dateOfTransaction)
+        holder.transactionDate.text = formattedDate
 
         // Set text color based on type
         val amountColor = if (isIncome)
