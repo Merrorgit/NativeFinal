@@ -17,3 +17,7 @@ data class Transaction(
      var amount: Double,
      var dateOfTransaction: String,
 )
+
+data class Balance(
+    val balance: Double,
+)

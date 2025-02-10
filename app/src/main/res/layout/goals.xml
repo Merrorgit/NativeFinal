@@ -43,6 +43,7 @@
                 android:layout_marginBottom="8dp"
                 android:hint="Input name"
                 android:padding="12dp"
+                android:id="@+id/goal_name_input"
                 android:textSize="16sp"/>
 
             <EditText
@@ -51,10 +52,12 @@
                 android:layout_marginBottom="8dp"
                 android:hint="Input goal amount"
                 android:padding="12dp"
+                android:id="@+id/goal_targetAmount_input"
                 android:textSize="16sp"/>
 
+
             <EditText
-                android:id="@+id/date_input"
+                android:id="@+id/goal_deadline_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Input deadline"
@@ -68,6 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add a goal"
+                android:id="@+id/add_goal_button"
                 android:backgroundTint="@color/dark_blue"
                 android:textColor="@color/white"
                 android:layout_gravity="center"

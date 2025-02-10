@@ -3,6 +3,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -10,16 +11,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.financialtracker.API.services.GoalService
+import com.example.financialtracker.API.services.TransactionService
+import com.example.financialtracker.data.CreateGoal
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import com.example.financialtracker.data.Goal
+import com.example.financialtracker.data.Transaction
 
 class GoalsActivity : AppCompatActivity() {
 
     private lateinit var GoalInput: EditText
     private lateinit var dateInput: EditText
+    private  lateinit var addButton: Button
     // Список категорий (в будущем можно загружать с бэка)
     private val categories = arrayOf("1", "2", "3", "4", "5")
     private var goals : MutableList<Goal> = mutableListOf()
@@ -33,19 +38,17 @@ class GoalsActivity : AppCompatActivity() {
         GoalInput.setOnClickListener {
             showCategoryDialog()
         }
-        dateInput = findViewById(R.id.date_input)
+        dateInput = findViewById(R.id.goal_deadline_input)
         dateInput.setOnClickListener {
             showDatePickerDialog()
         }
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_goals)
+        addButton = findViewById(R.id.add_goal_button)
+        addButton.setOnClickListener {
+            addGoal()
+        }
 
-        // Пример данных
-//        val goalsList = listOf(
-//            GoalGoal("New Laptop", 600, 1000, "10.12.2025"),
-//            GoalGoal("Vacation", 500, 3000, "01.06.2026"),
-//            GoalGoal("Car", 700, 1000, "20.09.2025")
-//        )
         adapter = GoalGoalAdapter(goals)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -92,7 +95,7 @@ class GoalsActivity : AppCompatActivity() {
             { _, year, month, dayOfMonth ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, month, dayOfMonth)
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
                 dateInput.setText(dateFormat.format(selectedDate.time))
             },
             calendar.get(Calendar.YEAR),
@@ -112,6 +115,33 @@ class GoalsActivity : AppCompatActivity() {
             } else {
                 Log.e("fetchTransactions", "Failed to fetch transactions")
                 Toast.makeText(this, "Failed to fetch transactions", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun addGoal() {
+        val nameInput = findViewById<EditText>(R.id.goal_name_input)
+        val deadlineInput = dateInput.text.toString().trim()
+        val targetAmountInput = findViewById<EditText>(R.id.goal_targetAmount_input).text.toString().trim().toDouble()
+
+        if (nameInput.text.isEmpty() || deadlineInput.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val newGoal = CreateGoal(
+            name = nameInput.text.toString(),
+            targetAmount = targetAmountInput,
+            deadline = deadlineInput.toString(),
+        )
+        Log.e("dataCheck", newGoal.toString())
+        GoalService.addGoal(this, newGoal) { goal ->
+            if (goal != null) {
+                Toast.makeText(this, "Transaction added!", Toast.LENGTH_SHORT).show()
+                goals.add(0, goal)
+                adapter.notifyItemInserted(0)
+            } else {
+                Toast.makeText(this, "Failed to add transaction", Toast.LENGTH_SHORT).show()
             }
         }
     }

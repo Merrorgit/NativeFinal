@@ -3,16 +3,24 @@ package com.example.financialtracker
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import android.util.Log
 import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.financialtracker.API.APIService
+import com.example.financialtracker.API.services.GoalService
+import com.example.financialtracker.API.services.TransactionService
+import com.example.financialtracker.data.Goal
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import okhttp3.HttpUrl
 
 class MainActivity : AppCompatActivity() {
-
+    private var goals : MutableList<Goal> = mutableListOf()
+    private lateinit var balance: TextView
+    private lateinit var adapter: GoalAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -26,34 +34,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         // --- Код ниже выполнится только если куки есть ---
-//        val transactions = listOf(
-//            Transaction("Transaction 1", 500.0),
-//            Transaction("Transaction 2", -667.0),
-//            Transaction("Transaction 3", 42.0),
-//            Transaction("Transaction 4", 0.0),
-//            Transaction("Transaction 5", -0.0)
-//        )
-
-
-//        val goals = listOf(
-//            Goal("Goal 1", 600, 1000),
-//            Goal("Goal 2", 500, 3000),
-//            Goal("Goal 3", 700, 1000),
-//            Goal("Goal 4", 700, 1000)
-//        )
-
 
 
         val recyclerGoals: RecyclerView = findViewById(R.id.recycler_view_goals)
         recyclerGoals.layoutManager = LinearLayoutManager(this)
-//        recyclerGoals.adapter = GoalAdapter(goals)
+        balance = findViewById<TextView>(R.id.balance)
+        adapter = GoalAdapter(goals)
+        fetchGoals()
 
         // Обработка кнопки "Log out"
         val logoutButton: Button = findViewById(R.id.logout)
         logoutButton.setOnClickListener {
             logOut()
         }
-
+        fetchBalance()
         // Настройка нижней навигации
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomNavigation.selectedItemId = R.id.nav_home // Подсвечивает "Home"
@@ -105,6 +99,27 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish()  // Завершаем текущую активность, чтобы пользователь не мог вернуться назад
     }
-
-
+    private fun fetchGoals() {
+        GoalService.fetchGoals(this) { fetchedGoals ->
+            if (fetchedGoals != null) {
+                Log.d("fetchGoals", "Received goals: $fetchedGoals")
+                goals.clear()
+                goals.addAll(fetchedGoals)
+                adapter.notifyDataSetChanged()
+            } else {
+                Log.e("fetchTransactions", "Failed to fetch transactions")
+                Toast.makeText(this, "Failed to fetch transactions", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun fetchBalance() {
+        TransactionService.fetchBalance(this) { fetchedBalance ->
+            if (fetchedBalance != null) {
+                balance.text = fetchedBalance.balance.toString()
+            } else {
+                Log.e("fetchTransactions", "Failed to fetch transactions")
+                Toast.makeText(this, "Failed to fetch transactions", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

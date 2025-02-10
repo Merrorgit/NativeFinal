@@ -24,7 +24,7 @@ class TransactionsActivity : AppCompatActivity() {
     private lateinit var categoryInput: EditText
     private lateinit var dateInput: EditText
     private lateinit var adapter: TransactionAdapter
-    private  lateinit var addButton: Button
+    private lateinit var addButton: Button
     private lateinit var radioGroup : RadioGroup
     // Список категорий (в будущем можно загружать с бэка)
     private val categories = arrayOf("Food", "Transport", "Shopping", "Bills", "Entertainment")
@@ -157,7 +157,6 @@ class TransactionsActivity : AppCompatActivity() {
             dateOfTransaction = date.toString(),
             type = type
         )
-        Log.e("dataCheck", newTransaction.toString())
         TransactionService.addTransaction(this, newTransaction) { transaction ->
             if (transaction != null) {
                 Toast.makeText(this, "Transaction added!", Toast.LENGTH_SHORT).show()

@@ -13,4 +13,7 @@ interface GoalAPI {
 
     @POST("goals")
     fun addGoal(@Body goal: CreateGoal): Call<Goal>
+
+//    @PUT("goals")
+//    fun addMoneyToGoal()
 }
