@@ -27,7 +27,7 @@ class TransactionsActivity : AppCompatActivity() {
     private lateinit var addButton: Button
     private lateinit var radioGroup : RadioGroup
     // Список категорий (в будущем можно загружать с бэка)
-    private val categories = arrayOf("Food", "Transport", "Shopping", "Bills", "Entertainment")
+    private val categories = arrayOf("Food", "Transport", "Shopping", "Bills", "Entertainment", "Salary", "Gift")
     private var transactions: MutableList<Transaction> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
