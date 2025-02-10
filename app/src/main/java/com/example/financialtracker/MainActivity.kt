@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.financialtracker.API.APIService
+import com.example.financialtracker.API.services.AuthService
 import com.example.financialtracker.API.services.GoalService
 import com.example.financialtracker.API.services.TransactionService
 import com.example.financialtracker.data.Goal
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private var goals : MutableList<Goal> = mutableListOf()
     private lateinit var balance: TextView
     private lateinit var adapter: GoalAdapter
+    private lateinit var UserName: String
+    private lateinit var usernameInput: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -41,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         balance = findViewById<TextView>(R.id.balance)
         adapter = GoalAdapter(goals)
         fetchGoals()
+        getName()
+        usernameInput = findViewById<TextView>(R.id.username_input)
 
         // Обработка кнопки "Log out"
         val logoutButton: Button = findViewById(R.id.logout)
@@ -119,6 +124,18 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.e("fetchTransactions", "Failed to fetch transactions")
                 Toast.makeText(this, "Failed to fetch transactions", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun getName() {
+        AuthService.getName(this) { userObj ->
+            Log.e("AuthService", userObj?.toString() ?: "userObj is null")
+
+            if (userObj != null) {
+                usernameInput.text = "Good day, ${userObj.user.username}!"
+            } else {
+                Log.e("get name", "Failed to get name")
+                Toast.makeText(this, "Failed to get name", Toast.LENGTH_SHORT).show()
             }
         }
     }

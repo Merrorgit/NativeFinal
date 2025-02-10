@@ -12,3 +12,11 @@ data class LoginData(
     @Expose
     var password: String? = null
 )
+
+data class UserResponse(
+    val user: User
+)
+
+data class User(
+    val username: String
+)
