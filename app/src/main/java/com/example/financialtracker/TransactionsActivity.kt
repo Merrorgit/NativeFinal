@@ -67,13 +67,13 @@ class TransactionsActivity : AppCompatActivity() {
                 R.id.nav_transactions -> true // Уже здесь, ничего не делаем
                 R.id.nav_home -> {
                     startActivity(Intent(this, MainActivity::class.java))
-
+                    overridePendingTransition(0, 0)
                     finish()
                     true
                 }
                 R.id.nav_goals -> {
                     startActivity(Intent(this, GoalsActivity::class.java))
-
+                    overridePendingTransition(0, 0)
                     finish()
                     true
                 }
