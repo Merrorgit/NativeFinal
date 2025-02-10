@@ -21,7 +21,6 @@ import okhttp3.HttpUrl
 class MainActivity : AppCompatActivity() {
     private var goals : MutableList<Goal> = mutableListOf()
     private lateinit var balance: TextView
-    private lateinit var adapter: GoalAdapter
     private lateinit var UserName: String
     private lateinit var usernameInput: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,10 +38,7 @@ class MainActivity : AppCompatActivity() {
         // --- Код ниже выполнится только если куки есть ---
 
 
-        val recyclerGoals: RecyclerView = findViewById(R.id.recycler_view_goals)
-        recyclerGoals.layoutManager = LinearLayoutManager(this)
         balance = findViewById<TextView>(R.id.balance)
-        adapter = GoalAdapter(goals)
         fetchGoals()
         getName()
         usernameInput = findViewById<TextView>(R.id.username_input)
@@ -110,7 +106,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d("fetchGoals", "Received goals: $fetchedGoals")
                 goals.clear()
                 goals.addAll(fetchedGoals)
-                adapter.notifyDataSetChanged()
             } else {
                 Log.e("fetchTransactions", "Failed to fetch transactions")
                 Toast.makeText(this, "Failed to fetch transactions", Toast.LENGTH_SHORT).show()
